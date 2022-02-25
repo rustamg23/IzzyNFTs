@@ -1,4 +1,3 @@
-Alexandr, [25.02.2022 22:07]
 from solana.rpc.api import Client
 from theblockchainapi import TheBlockchainAPIResource, SolanaNetwork
 import requests
