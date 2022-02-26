@@ -19,14 +19,17 @@ def start(client, message):
         ],
         resize_keyboard=True  # Make the keyboard smaller
     ))
-    print('This is /start command')
+    usersProfile[message.from_user.username] = {"reg": false}
 
 
 @App.on_message(filters.command('reg'))
 def reg(client, message):
     rega = back.registration(message.text[5:], message.from_user.username)
     print(rega)
-    message.reply("Registration succesful. Now you can use bot functions.\nuse /help for more information")
+    if(len(message.text) > 10):
+        message.reply("Registration succesful. Now you can use '/my_...' bot functions.\nuse /help for more information")
+    else:
+        message.reply("Call /reg command again with your publicKey")
 
 
 @App.on_message(filters.command('my_balance'))
@@ -73,5 +76,16 @@ def drop(client, message):
             App.send_photo(message.chat.id, back.request_img(uri), caption=back.request_data(uri))
         except:
             print(address)
+
+@App.on_message(filters.command('help'))
+def helper(client, message):
+    message.reply(
+        "This bot helps you to surf and trade Solana NFTs:\n"\
+        "/reg + publicKey - registrate your public address, so you dont need to paste it later\n"\
+        "/my_collection - shows your NFTs with names and descriptions\n"\
+        "/my_balance - shows your SOL balance\n"\
+        "/show_collection + user_publicKey - shows user NFTs with names and descriptions\n"\
+        "/show_balance + user_publicKey - shows user SOL balance"
+    )
 
 App.run()  # Automatically start() and idle()
