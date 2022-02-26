@@ -12,6 +12,7 @@ class SolEnd:
             ,
             api_secret_key="3xqbgM0fQaCHaNZ"
         )
+        self.usersProfile = {}
 
     def connect(self):
         server = "https://solana-mainnet.phantom.tech"
@@ -55,6 +56,7 @@ class SolEnd:
         info = requests.get(uri_token).json()["description"]
         fin = name + '\n' + info
         return fin 
+    
 
 if __name__ == "__main__":
     #address = 'H2hFezqB6JNVUixUMttJogFr3KvhTDX4bLvT8Rq4eJwW'
