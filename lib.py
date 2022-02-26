@@ -22,6 +22,11 @@ class SolEnd:
     def balance(self, address, client):
         return client.get_balance(address)
 
+    def price_in_usdt(self):
+        link_sol = 'https://public-api.solscan.io/market/token/So11111111111111111111111111111111111111112'
+        res = requests.get(link_sol).json()
+        return res["priceUsdt"]
+
     def registration(self, pub_key, nickname):
         self.addr_to_nick[nickname] = pub_key
         return self.addr_to_nick
