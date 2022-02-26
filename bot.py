@@ -6,7 +6,7 @@ from lib import SolEnd
 
 API_ID = 16100063
 API_HASH = "d49d1061fe9e26956314572ad0586265"
-BOT_TOKEN = ""
+BOT_TOKEN = "5254843364:AAHw78tj-3qC0LozUeTMMiGIUkFYEi8hcNI"
 App = Client("SolgramWalletBot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 back = SolEnd()
 
@@ -52,7 +52,7 @@ def raw(client, message):
     new_bal = round(new_bal / 1000000000, 2)
     sol_bal = round((new_bal * back.price_in_usdt()), 2)
     print(f'{new_bal} SOL / {sol_bal} USDT')
-    message.reply(f'{new_bal} SOL / {sol_bal} USDT') #
+    message.reply(f'{new_bal} SOL = {sol_bal} USD') #
 
 
 @App.on_message(filters.command('my_collection'))
@@ -75,7 +75,7 @@ def raw(client, message):
     new_bal = round(new_bal / 1000000000, 2)
     sol_bal = round((new_bal * back.price_in_usdt()), 2)
     print(f'{new_bal} SOL / {sol_bal} USDT')
-    message.reply(f'{new_bal} SOL / {sol_bal} USDT') #
+    message.reply(f'{new_bal} SOL = {sol_bal} USD') #
 
 
 @App.on_message(filters.command('show_collection'))
