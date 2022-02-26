@@ -6,7 +6,7 @@ from lib import SolEnd
 
 API_ID = 16100063
 API_HASH = "d49d1061fe9e26956314572ad0586265"
-BOT_TOKEN = "5254843364:AAHw78tj-3qC0LozUeTMMiGIUkFYEi8hcNI"
+BOT_TOKEN = ""
 App = Client("SolgramWalletBot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 back = SolEnd()
 
