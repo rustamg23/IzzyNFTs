@@ -8,10 +8,10 @@ class SolEnd:
     def __init__(self):
         self.addr_to_nick = {}
         self.BLOCKCHAIN_API_RESOURCE = TheBlockchainAPIResource(
-            api_key_id="F82PeTn9k4CM1SW"
-            ,
+            api_key_id="F82PeTn9k4CM1SW",
             api_secret_key="3xqbgM0fQaCHaNZ"
         )
+        self.users_profile = {}
 
     def connect(self):
         server = "https://solana-mainnet.phantom.tech"
@@ -54,8 +54,9 @@ class SolEnd:
         name = requests.get(uri_token).json()["name"]
         info = requests.get(uri_token).json()["description"]
         fin = name + '\n' + info
-        return fin 
+        return fin
+
 
 if __name__ == "__main__":
-    #address = 'H2hFezqB6JNVUixUMttJogFr3KvhTDX4bLvT8Rq4eJwW'
+    address = 'H2hFezqB6JNVUixUMttJogFr3KvhTDX4bLvT8Rq4eJwW'
     print(SolEnd().req(address))
