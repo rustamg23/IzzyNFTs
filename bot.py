@@ -22,19 +22,6 @@ def start(client, message):
     print('This is /start command')
 
 
-@App.on_message(filters.command('my_collection'))
-def drop(client, message):
-    wallet = back.addr_to_nick[message.from_user.username]
-    print(wallet)
-    for address in back.get_tokens(wallet):
-        try:
-            metadata = back.get_nft_metadata(address)
-            uri = back.get_uri_token(metadata)
-            App.send_photo(message.chat.id, back.request_img(uri), caption=back.request_data(uri))
-        except:
-            print(address)
-
-
 @App.on_message(filters.command('reg'))
 def reg(client, message):
     rega = back.registration(message.text[5:], message.from_user.username)
@@ -51,5 +38,40 @@ def raw(client, message):
     print(new_bal)
     message.reply(str(new_bal) + ' SOL')
 
+
+@App.on_message(filters.command('my_collection'))
+def drop(client, message):
+    wallet = back.addr_to_nick[message.from_user.username]
+    print(wallet)
+    for address in back.get_tokens(wallet):
+        try:
+            metadata = back.get_nft_metadata(address)
+            uri = back.get_uri_token(metadata)
+            App.send_photo(message.chat.id, back.request_img(uri), caption=back.request_data(uri))
+        except:
+            print(address)
+
+
+@App.on_message(filters.command('show_balance'))
+def raw(client, message):
+    bal = back.balance((message.text)[14:], back.connect())
+    print(bal)
+    new_bal = bal["result"]["value"]
+    new_bal /= 1000000000
+    print(new_bal)
+    message.reply(str(new_bal) + ' SOL')
+
+
+@App.on_message(filters.command('show_collection'))
+def drop(client, message):
+    wallet = (message.text)[17:]
+    print(wallet)
+    for address in back.get_tokens(wallet):
+        try:
+            metadata = back.get_nft_metadata(address)
+            uri = back.get_uri_token(metadata)
+            App.send_photo(message.chat.id, back.request_img(uri), caption=back.request_data(uri))
+        except:
+            print(address)
 
 App.run()  # Automatically start() and idle()
