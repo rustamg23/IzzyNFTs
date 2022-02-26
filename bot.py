@@ -8,18 +8,30 @@ API_ID = 16100063
 API_HASH = "d49d1061fe9e26956314572ad0586265"
 BOT_TOKEN = ""
 App = Client("SolgramWalletBot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
-
-
 back = SolEnd()
+
+
 @App.on_message(filters.command('start'))
 def start(client, message):
-    message.reply('This is /start command', reply_markup=ReplyKeyboardMarkup(
+    text = f'Hey! Welcome to //NAME// bot. ' \
+           f'We allow you to view and buy NFTs conveniently and quickly right on Telegram.' \
+           f'You need to connect your wallet to make the most use out of our application.' \
+           f' Please, share your public key and we’ll connect it to your Telegram ID.'
+
+    message.reply(text, reply_markup=InlineKeyboardMarkup(
         [
-            ["My collection", "Balance", "C", "D"]
-        ],
-        resize_keyboard=True  # Make the keyboard smaller
+            [
+                InlineKeyboardButton(
+                    'Registration',
+                    callback_data='registration'
+                ),
+                InlineKeyboardButton(
+                    'Skip',
+                    callback_data='menu'
+                )
+            ]
+        ]
     ))
-    print('This is /start command')
 
 
 @App.on_message(filters.command('reg'))
@@ -73,5 +85,6 @@ def drop(client, message):
             App.send_photo(message.chat.id, back.request_img(uri), caption=back.request_data(uri))
         except:
             print(address)
+
 
 App.run()  # Automatically start() and idle()
