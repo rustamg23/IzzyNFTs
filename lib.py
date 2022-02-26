@@ -19,21 +19,11 @@ class SolEnd:
         return client
 
     def balance(self, address, client):
-        print(client.get_balance(address))
+        return client.get_balance(address)
 
     def registration(self, pub_key, nickname):
         self.addr_to_nick[nickname] = pub_key
         return self.addr_to_nick
-
-    # def tokens(self, address):
-    #     address_of_tokkens = []
-    #     link = f'https://public-api.solscan.io/account/tokens?account={address}'
-    #     res = requests.get(link).json()
-    #
-    #     for t in res:
-    #         address_of_tokkens.append(t['tokenAddress'])
-    #
-    #     return address_of_tokkens
 
     def get_tokens(self, address):
         address_of_tokens = []
@@ -42,7 +32,7 @@ class SolEnd:
 
         for tokens in res:
             address_of_tokens.append(tokens['tokenAddress'])
-
+        print(address_of_tokens)
         return address_of_tokens
 
     def get_nft_metadata(self, nft_address):
@@ -60,7 +50,12 @@ class SolEnd:
         img = requests.get(uri_token).json()['image']
         return img
 
+    def request_data(seld, uri_token):
+        name = requests.get(uri_token).json()["name"]
+        info = requests.get(uri_token).json()["description"]
+        fin = name + '\n' + info
+        return fin 
 
 if __name__ == "__main__":
-    address = '2qfcgEjCZvYZgDrcFY6qEcbhF1nSJuujHNMGpirpWVnB'
+    #address = 'H2hFezqB6JNVUixUMttJogFr3KvhTDX4bLvT8Rq4eJwW'
     print(SolEnd().req(address))
