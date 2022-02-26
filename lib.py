@@ -12,7 +12,7 @@ class SolEnd:
             ,
             api_secret_key="3xqbgM0fQaCHaNZ"
         )
-        self.usersProfile = {}
+        self.users_profile = {}
 
     def connect(self):
         server = "https://solana-mainnet.phantom.tech"
@@ -54,10 +54,10 @@ class SolEnd:
     def request_data(seld, uri_token):
         name = requests.get(uri_token).json()["name"]
         info = requests.get(uri_token).json()["description"]
-        fin = name + '\n' + info
+        fin = name + '\n' + info + '\n' + "price is not set now, you can offer it"
         return fin 
     
 
 if __name__ == "__main__":
-    #address = 'H2hFezqB6JNVUixUMttJogFr3KvhTDX4bLvT8Rq4eJwW'
+    address = 'H2hFezqB6JNVUixUMttJogFr3KvhTDX4bLvT8Rq4eJwW'
     print(SolEnd().req(address))
