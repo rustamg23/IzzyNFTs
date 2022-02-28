@@ -8,9 +8,9 @@ class SolEnd:
     def __init__(self):
         self.addr_to_nick = {}
         self.BLOCKCHAIN_API_RESOURCE = TheBlockchainAPIResource(
-            api_key_id="F82PeTn9k4CM1SW"
+            api_key_id=""
             ,
-            api_secret_key="3xqbgM0fQaCHaNZ"
+            api_secret_key=""
         )
         self.users_profile = {}
 
@@ -62,7 +62,9 @@ class SolEnd:
         fin = name + '\n' + info + '\n' + "price is not set now, you can offer it"
         return fin 
     
-
+    def bind(self, binder, holder, nft_address):
+        self.users_profile[holder] = {"token": nft_address,
+        "binder": binder}
 if __name__ == "__main__":
     address = 'H2hFezqB6JNVUixUMttJogFr3KvhTDX4bLvT8Rq4eJwW'
     print(SolEnd().req(address))
