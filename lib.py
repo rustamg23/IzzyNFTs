@@ -8,18 +8,24 @@ class SolEnd:
     def __init__(self):
         self.addr_to_nick = {}
         self.BLOCKCHAIN_API_RESOURCE = TheBlockchainAPIResource(
-            api_key_id="F82PeTn9k4CM1SW"
+            api_key_id=""
             ,
-            api_secret_key="3xqbgM0fQaCHaNZ"
+            api_secret_key=""
         )
+        self.users_profile = {}
 
     def connect(self):
-        server = "https://solana-mainnet.phantom.tech"
+        server = "https://api.devnet.solana.com/"
         client = Client(server)
         return client
 
     def balance(self, address, client):
         return client.get_balance(address)
+
+    def price_in_usdt(self):
+        link_sol = 'https://public-api.solscan.io/market/token/So11111111111111111111111111111111111111112'
+        res = requests.get(link_sol).json()
+        return res["priceUsdt"]
 
     def registration(self, pub_key, nickname):
         self.addr_to_nick[nickname] = pub_key
@@ -27,9 +33,7 @@ class SolEnd:
 
     def get_tokens(self, address):
         address_of_tokens = []
-        link = f'https://public-api.solscan.io/account/tokens?account={address}'
-        res = requests.get(link).json()
-
+        res = requests.get(f'https://api-devnet.solscan.io/account/tokens?address={address}').json()['data']
         for tokens in res:
             address_of_tokens.append(tokens['tokenAddress'])
         print(address_of_tokens)
@@ -38,7 +42,7 @@ class SolEnd:
     def get_nft_metadata(self, nft_address):
         nft_metadata = self.BLOCKCHAIN_API_RESOURCE.get_nft_metadata(
             mint_address=nft_address,
-            network=SolanaNetwork.MAINNET_BETA
+            network=SolanaNetwork.DEVNET
         )
         return nft_metadata
 
@@ -53,9 +57,12 @@ class SolEnd:
     def request_data(seld, uri_token):
         name = requests.get(uri_token).json()["name"]
         info = requests.get(uri_token).json()["description"]
-        fin = name + '\n' + info
+        fin = name + '\n' + info + '\n' + "price is not set now, you can offer it"
         return fin 
-
+    
+    def bind(self, binder, holder, nft_address):
+        self.users_profile[holder] = {"token": nft_address,
+        "binder": binder}
 if __name__ == "__main__":
-    #address = 'H2hFezqB6JNVUixUMttJogFr3KvhTDX4bLvT8Rq4eJwW'
+    address = 'H2hFezqB6JNVUixUMttJogFr3KvhTDX4bLvT8Rq4eJwW'
     print(SolEnd().req(address))
