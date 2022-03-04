@@ -8,9 +8,9 @@ class SolEnd:
     def __init__(self):
         self.addr_to_nick = {}
         self.BLOCKCHAIN_API_RESOURCE = TheBlockchainAPIResource(
-            api_key_id=""
-            ,
-            api_secret_key=""
+            # you need to create on this site https://dashboard.blockchainapi.com/#contact
+            api_key_id="9spRKqC0GgLYLpL",
+            api_secret_key="f573q7V4fMi3abC"
         )
         self.users_profile = {}
 
