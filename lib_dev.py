@@ -8,9 +8,9 @@ class SolEnd:
     def __init__(self):
         self.addr_to_nick = {}
         self.BLOCKCHAIN_API_RESOURCE = TheBlockchainAPIResource(
-            api_key_id=""
-            ,
-            api_secret_key=""
+            # you need to create on this site https://dashboard.blockchainapi.com/#contact
+            api_key_id="9spRKqC0GgLYLpL",
+            api_secret_key="f573q7V4fMi3abC"
         )
         self.users_profile = {}
 
@@ -58,11 +58,13 @@ class SolEnd:
         name = requests.get(uri_token).json()["name"]
         info = requests.get(uri_token).json()["description"]
         fin = name + '\n' + info + '\n' + "price is not set now, you can offer it"
-        return fin 
-    
+        return fin
+
     def bind(self, binder, holder, nft_address):
         self.users_profile[holder] = {"token": nft_address,
-        "binder": binder}
+                                      "binder": binder}
+
+
 if __name__ == "__main__":
     address = 'H2hFezqB6JNVUixUMttJogFr3KvhTDX4bLvT8Rq4eJwW'
     print(SolEnd().req(address))
