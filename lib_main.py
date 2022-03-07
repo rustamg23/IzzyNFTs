@@ -8,14 +8,14 @@ class SolEnd:
     def __init__(self):
         self.addr_to_nick = {}
         self.BLOCKCHAIN_API_RESOURCE = TheBlockchainAPIResource(
-            api_key_id=""
-            ,
-            api_secret_key=""
+            # you need to create on this site https://dashboard.blockchainapi.com/#contact
+            api_key_id="9spRKqC0GgLYLpL",
+            api_secret_key="f573q7V4fMi3abC"
         )
         self.users_profile = {}
 
     def connect(self):
-        server = "https://solana-mainnet.phantom.tech"
+        server = "https://api.devnet.solana.com/"
         client = Client(server)
         return client
 
@@ -33,9 +33,7 @@ class SolEnd:
 
     def get_tokens(self, address):
         address_of_tokens = []
-        link = f'https://public-api.solscan.io/account/tokens?account={address}'
-        res = requests.get(link).json()
-
+        res = requests.get(f'https://api-devnet.solscan.io/account/tokens?address={address}').json()['data']
         for tokens in res:
             address_of_tokens.append(tokens['tokenAddress'])
         print(address_of_tokens)
@@ -44,7 +42,7 @@ class SolEnd:
     def get_nft_metadata(self, nft_address):
         nft_metadata = self.BLOCKCHAIN_API_RESOURCE.get_nft_metadata(
             mint_address=nft_address,
-            network=SolanaNetwork.MAINNET_BETA
+            network=SolanaNetwork.DEVNET
         )
         return nft_metadata
 
@@ -60,11 +58,13 @@ class SolEnd:
         name = requests.get(uri_token).json()["name"]
         info = requests.get(uri_token).json()["description"]
         fin = name + '\n' + info + '\n' + "price is not set now, you can offer it"
-        return fin 
-    
+        return fin
+
     def bind(self, binder, holder, nft_address):
         self.users_profile[holder] = {"token": nft_address,
-        "binder": binder}
+                                      "binder": binder}
+
+
 if __name__ == "__main__":
     address = 'H2hFezqB6JNVUixUMttJogFr3KvhTDX4bLvT8Rq4eJwW'
     print(SolEnd().req(address))
