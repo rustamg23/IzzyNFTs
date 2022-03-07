@@ -2,20 +2,22 @@ from ast import And
 import re
 from pyrogram import Client, filters
 from pyrogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
-from pyrogram.types import (InlineQueryResultArticle, InputTextMessageContent, InlineKeyboardMarkup, InlineKeyboardButton)
-from lib_dev import SolEnd
+from pyrogram.types import (InlineQueryResultArticle, InputTextMessageContent, InlineKeyboardMarkup,
+                            InlineKeyboardButton)
+from lib import SolEnd
 
-### CBXTEvYqLZtBGSWwJcD7w7oCPGdR38TGmv8yAM3gQ1qL devnet1
-### 9Rfo6MyLtpka9SzxqbQEWYEyaRvXRMJzt9Npo1mg9skX devnet2
-### H2hFezqB6JNVUixUMttJogFr3KvhTDX4bLvT8Rq4eJwW mainnet1
-### AddjSTX6VdJCgp2B36ioVnyHw57sSjqfewiBXYywwEoc mainnet2
+# devnet1 CBXTEvYqLZtBGSWwJcD7w7oCPGdR38TGmv8yAM3gQ1qL
+# devnet2 9Rfo6MyLtpka9SzxqbQEWYEyaRvXRMJzt9Npo1mg9skX
+# mainnet1 H2hFezqB6JNVUixUMttJogFr3KvhTDX4bLvT8Rq4eJwW
+# mainnet2 AddjSTX6VdJCgp2B36ioVnyHw57sSjqfewiBXYywwEoc
 
 API_ID = 10187665
 API_HASH = "f8113bc0748601e3989acd415971b259"
-BOT_TOKEN = ""
+BOT_TOKEN = "5255791665:AAEvrPBhGZDxwHZkOQR7sgJu5m5medHQmjo"
 App = Client("SolgramWalletBot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 back = SolEnd()
 Solana_Client = back.connect()
+
 
 @App.on_message(filters.command('start'))
 def start(client, message):
@@ -54,9 +56,10 @@ def start(client, query):
     elif query['data'] == 'registration':
         back.users_profile[query.from_user.username]['reg_flag'] = True
         back.users_profile[query.from_user.username]['func_data'] = 'registration'
-        App.send_message(query.from_user.username, 'Please input public key')
+        App.send_message(query.from_user.username, 'Please input your public key:')
     elif query['data'] == 'bind':
-        back.bind(query['data']['binder'],query['data']['holder'], query['data']['token_address'])
+        back.bind(query['data']['binder'], query['data']['holder'], query['data']['token_address'])
+
 
 @App.on_message(filters.command('my_balance'))
 def raw(client, message):
@@ -71,10 +74,11 @@ def raw(client, message):
 @App.on_message(filters.command('my_collection'))
 def drop(client, message):
     wallet = back.addr_to_nick[message.from_user.username]
-    print(wallet)
+    print(f'{message.from_user.username}: {wallet}')
     for address in back.get_tokens(wallet):
+        metadata = back.get_nft_metadata(address)
         try:
-            metadata = back.get_nft_metadata(address)
+
             uri = back.get_uri_token(metadata)
             App.send_photo(message.from_user.username, back.request_img(uri), caption=back.request_data(uri))
         except:
@@ -85,40 +89,45 @@ def drop(client, message):
 def raw(client, message):
     back.users_profile[message.from_user.username]['reg_flag'] = True
     back.users_profile[message.from_user.username]['func_data'] = {
-        'func_name':"show_balance",
+        'func_name': "show_balance",
         'chat_id': str(message.chat.id)
-        }
+    }
     print(message.chat.id)
     message.reply("Please input public key:")
+
 
 @App.on_message(filters.command('show_collection'))
 def drop(client, message):
     back.users_profile[message.from_user.username]['reg_flag'] = True
     back.users_profile[message.from_user.username]['func_data'] = {
-        'func_name':"show_collection",
+        'func_name': "show_collection",
         'chat_id': str(message.chat.id)
-        }
+    }
     print(message.chat.id)
     message.reply("Please input your public key:")
-   
+
+
 @App.on_message(filters.command('help'))
 def helper(client, message):
     message.reply(
-        "This bot helps you to surf and trade Solana NFTs:\n"\
-        "/reg + publicKey - registrate your public address, so you dont need to paste it later\n"\
-        "/my_collection - shows your NFTs with names and descriptions\n"\
-        "/my_balance - shows your SOL balance\n"\
-        "/show_collection + user_publicKey - shows user NFTs with names and descriptions\n"\
+        "This bot helps you to surf and trade Solana NFTs:\n" \
+        "/reg + publicKey - registrate your public address, so you dont need to paste it later\n" \
+        "/my_collection - shows your NFTs with names and descriptions\n" \
+        "/my_balance - shows your SOL balance\n" \
+        "/show_collection + user_publicKey - shows user NFTs with names and descriptions\n" \
         "/show_balance + user_publicKey - shows user SOL balance"
     )
+
+
 # @App.on_message(filters.command('buy'))
 
 @App.on_callback_query()
 def bind(client, query):
     data = query["data"]
-    back.bind(query.from_user.username,data[1]["holder"],data[1]["nft_address"])
-    App.send_message("Offer your price (bid). It will be shared with the owner. "\
-        "If approved, you will be charged and become the owner.")
+    back.bind(query.from_user.username, data[1]["holder"], data[1]["nft_address"])
+    App.send_message("Offer your price (bid). It will be shared with the owner. " \
+                     "If approved, you will be charged and become the owner.")
+
 
 @App.on_message()
 def other(client, message):
@@ -129,50 +138,71 @@ def other(client, message):
         back.users_profile[user]['reg_flag'] = False
         back.addr_to_nick[user] = message.text
         print(back.addr_to_nick)
-        App.send_message(chat_id,"Registration succesful. Now you can use bot functions."\
-                      "Use /help for more information")
+        App.send_message(chat_id, "Registration succesful. Now you can use bot functions." \
+                                  "Use /help for more information")
 
-    elif back.users_profile[user]['reg_flag'] and back.users_profile[user]['func_data']['func_name'] == "show_collection" :
+    elif back.users_profile[user]['reg_flag'] and back.users_profile[user]['func_data'][
+        'func_name'] == "show_collection":
         back.users_profile[user]['reg_flag'] = False
-        wallet = message.text
+        mess = message.text
+        if mess[0] == '@':
+            wallet = back.addr_to_nick[mess[1:]]
+        else:
+            wallet = message.text
         print(wallet)
-        holder = "@Okari1n"
-        for address in back.get_tokens(wallet):
-            keyboard = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        'Buy',
-                        callback_data='buy'
-                    ),
-                    InlineKeyboardButton(
-                        'Bid',
-                        callback_data = 'bid',
-                        #     'function_name': 'bind',
-                        #     'binder' : 'message.from_user.user',
-                        #     'token_address': address,
-                        #     'holder': holder}
-                    )
-                ]
-            ]
-            )
-            try:
-                metadata = back.get_nft_metadata(address)
-                uri = back.get_uri_token(metadata)
-                print(user)
-                App.send_photo(user,
-                    back.request_img(uri),
-                    caption=back.request_data(uri),
-                    reply_markup = keyboard)
-            except:
-                print(address)
 
-    elif back.users_profile[user]['reg_flag'] and back.users_profile[user]['func_data']['func_name'] == "show_balance" :
-        bal = back.balance(message.text, back.connect())
+        addresses = back.get_tokens(wallet)
+        if len(addresses) <= 0:
+            App.send_message(chat_id, "This user does not have NFTs.")
+        else:
+            for address in back.get_tokens(wallet):
+                keyboard = InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(
+                                'Buy',
+                                callback_data='buy'
+                            ),
+                            InlineKeyboardButton(
+                                'Bid',
+                                callback_data='bid',
+                                #     'function_name': 'bind',
+                                #     'binder' : 'message.from_user.user',
+                                #     'token_address': address,
+                                #     'holder': holder}
+                            )
+                        ]
+                    ]
+                )
+
+                try:
+                    metadata = back.get_nft_metadata(address)
+                    uri = back.get_uri_token(metadata)
+                    print(user)
+                    App.send_photo(user,
+                                   back.request_img(uri),
+                                   caption=back.request_data(uri),
+                                   reply_markup=keyboard)
+                except:
+                    print(address)
+
+    elif back.users_profile[user]['reg_flag'] and back.users_profile[user]['func_data']['func_name'] == "show_balance":
+        mess = message.text
+        if mess[0] == '@':
+            wallet = back.addr_to_nick[mess[1:]]
+        else:
+            wallet = message.text
+        print(wallet)
+
+        bal = back.balance(wallet, back.connect())
         new_bal = bal["result"]["value"]
         new_bal = round(new_bal / 1000000000, 2)
         sol_bal = round((new_bal * back.price_in_usdt()), 2)
         print(f'{new_bal} SOL / {sol_bal} USDT')
-        message.reply(f'{new_bal} SOL = {sol_bal} USD') #
+        message.reply(f'{new_bal} SOL = {sol_bal} USD')  #
+
+    else:
+        App.send_message(chat_id, "Sorry, but I don`t know this command. ")
+
 
 App.run()
