@@ -5,7 +5,21 @@ import json
 
 
 class SolEnd:
-    def __init__(self):
+    def __init__(self, network='dev'):
+
+        if network == 'dev':
+            self.client = Client("https://api.devnet.solana.com/")
+            self.network = 'devnet'
+        elif network == 'main':
+            self.client = Client("https://solana-mainnet.phantom.tech")
+            self.network = 'mainnet'
+        else:
+            self.client = Client("https://api.devnet.solana.com/")
+            self.network = 'devnet'
+            print('This network mode does not exist!')
+
+        print(f'You work in {self.network}')
+
         self.addr_to_nick = {}
         self.BLOCKCHAIN_API_RESOURCE = TheBlockchainAPIResource(
             # you need to create on this site https://dashboard.blockchainapi.com/#contact
@@ -14,13 +28,8 @@ class SolEnd:
         )
         self.users_profile = {}
 
-    def connect(self):
-        server = "https://api.devnet.solana.com/"
-        client = Client(server)
-        return client
-
-    def balance(self, address, client):
-        return client.get_balance(address)
+    def balance(self, address):
+        return self.client.get_balance(address)
 
     def price_in_usdt(self):
         link_sol = 'https://public-api.solscan.io/market/token/So11111111111111111111111111111111111111112'
@@ -31,18 +40,29 @@ class SolEnd:
         self.addr_to_nick[nickname] = pub_key
         return self.addr_to_nick
 
-    def get_tokens(self, address):
-        address_of_tokens = []
-        res = requests.get(f'https://api-devnet.solscan.io/account/tokens?address={address}').json()['data']
-        for tokens in res:
-            address_of_tokens.append(tokens['tokenAddress'])
-        print(address_of_tokens)
-        return address_of_tokens
+    def get_tokens(self, wallet_address):
+        if self.network == 'devnet':
+            link = f'https://api-devnet.solscan.io/account/tokens?address={wallet_address}'
+            res = requests.get(link).json()['data']
+        elif self.network == 'mainnet':
+            link = f'https://public-api.solscan.io/account/tokens?account={wallet_address}'
+            res = requests.get(link).json()
+
+        addr_of_tokens = [tokens['tokenAddress'] for tokens in res]
+
+        # for tokens in res:
+        #     addr_of_tokens.append(tokens['tokenAddress'])
+        return addr_of_tokens
 
     def get_nft_metadata(self, nft_address):
+        if self.network == 'devnet':
+            network = SolanaNetwork.DEVNET
+        elif self.network == 'mainnet':
+            network = SolanaNetwork.MAINNET_BETA
+
         nft_metadata = self.BLOCKCHAIN_API_RESOURCE.get_nft_metadata(
             mint_address=nft_address,
-            network=SolanaNetwork.DEVNET
+            network=network
         )
         return nft_metadata
 
@@ -57,8 +77,12 @@ class SolEnd:
     def request_data(seld, uri_token):
         name = requests.get(uri_token).json()["name"]
         info = requests.get(uri_token).json()["description"]
-        fin = name + '\n' + info + '\n' + "price is not set now, you can offer it"
-        return fin
+        res = f'{name} \n{info}' \
+              f'\n- - - - - - - - - - - - - - - -' \
+              f' - - - - - - - - - - - - - - - - \n' \
+              f'price is not set now, you can offer it'
+
+        return res
 
     def bind(self, binder, holder, nft_address):
         self.users_profile[holder] = {"token": nft_address,
