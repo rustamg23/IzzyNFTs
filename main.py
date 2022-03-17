@@ -1,5 +1,3 @@
-from ast import And
-import re
 from pyrogram import Client, filters
 from pyrogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.types import (InlineQueryResultArticle, InputTextMessageContent, InlineKeyboardMarkup,
@@ -13,11 +11,9 @@ from lib import SolEnd
 
 API_ID = 10187665
 API_HASH = "f8113bc0748601e3989acd415971b259"
-BOT_TOKEN = "5255791665:AAEvrPBhGZDxwHZkOQR7sgJu5m5medHQmjo"
+BOT_TOKEN = " " #token of bot
 App = Client("SolgramWalletBot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
-# back = SolEnd(network='dev')    # for devnet: network='dev' or nothing
-back = SolEnd(network='main')    # for mainnet: network='main'
-
+back = SolEnd(network='main')    # for mainnet: network='main', for devnet: network='dev' or nothing
 
 
 @App.on_message(filters.command('start'))
@@ -58,8 +54,10 @@ def start(client, query):
         back.users_profile[query.from_user.username]['input_flag'] = True
         back.users_profile[query.from_user.username]['func_data'] = 'registration'
         App.send_message(query.from_user.username, 'Please input your public key:')
-    elif query['data'] == 'bind':
-        back.bind(query['data']['binder'], query['data']['holder'], query['data']['token_address'])
+    elif query['data'] == 'bid':
+        # must colling function bid from object of SolEnd() from lib
+        App.send_message(query.from_user.username, 'Go on, name your price 😏.')
+
 
 
 @App.on_message(filters.command('my_balance'))
@@ -99,7 +97,7 @@ def show_balance(client, message):
         'chat_id': str(message.chat.id)
     }
     print(message.chat.id)
-    message.reply("Please input public key:")
+    message.reply("Please input their public key or username:")
 
 
 @App.on_message(filters.command('show_collection'))
@@ -110,7 +108,7 @@ def show_collection(client, message):
         'chat_id': str(message.chat.id)
     }
     print(message.chat.id)
-    message.reply("Please input your public key:")
+    message.reply("Please input their public key or username:")
 
 
 @App.on_message(filters.command('help'))
@@ -174,7 +172,12 @@ def other(client, message):
         if len(token_addresses) <= 0:
             App.send_message(chat_id, "This user does not have NFTs.")
         else:
-            App.send_message(user, f'There are {len(token_addresses)} NFTs in this wallets')
+
+            if len(token_addresses) == 1:
+                App.send_message(user, f'There is {len(token_addresses)} NFT in this wallet :)')
+            elif len(token_addresses) > 1:
+                App.send_message(user, f'There are {len(token_addresses)} NFTs in this wallet :)')
+
             for address in token_addresses:
                 keyboard = InlineKeyboardMarkup(
                     [
@@ -185,11 +188,7 @@ def other(client, message):
                             ),
                             InlineKeyboardButton(
                                 'Bid',
-                                callback_data='bid',
-                                #     'function_name': 'bind',
-                                #     'binder' : 'message.from_user.user',
-                                #     'token_address': address,
-                                #     'holder': holder}
+                                callback_data='bid'
                             )
                         ]
                     ]
@@ -207,7 +206,7 @@ def other(client, message):
                 except:
                     print(address)
 
-            App.send_message(user, 'It\'s all a collection.')
+            App.send_message(user, 'That\'s it. The entire collection^^.')
 
     elif back.users_profile[user]['input_flag'] and \
             back.users_profile[user]['func_data']['func_name'] == "show_balance":
