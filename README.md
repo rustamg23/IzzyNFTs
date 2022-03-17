@@ -7,4 +7,4 @@ The bot allows you to check the contents of (now just Solana) crypto wallets usi
 
 Created and presented for the first time at the the Solana Moscow Hacker House hackathon in February 2022.
 
-Initially, IzzyNFTs was created on the Solana blockchain, but soon it will support all popular blockchain networks. It now workes on Telegram, we are currently working on Discord.
+Initially, IzzyNFTs was created on the Solana blockchain, but soon it will support all popular blockchain networks. Additionally, it now supports on Telegram, we are currently working on Discord.
