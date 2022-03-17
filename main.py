@@ -115,7 +115,7 @@ def show_collection(client, message):
 def helper(client, message):
     message.reply(
         "This bot helps you to surf and trade Solana NFTs:\n"
-        "/reg + publicKey - registrate your public address, so you dont need to paste it later\n"
+        "/reg + publicKey - registrate your public address, so you don't need to paste it later\n"
         "/my_collection - shows your NFTs with names and descriptions\n"
         "/my_balance - shows your SOL balance\n"
         "/show_collection + user_publicKey - shows user NFTs with names and descriptions\n"
@@ -128,7 +128,7 @@ def bind(client, query):
     data = query["data"]
     back.bind(query.from_user.username, data[1]["holder"], data[1]["nft_address"])
     App.send_message("Offer your price (bid). It will be shared with the owner. "
-                     "If approved, you will be charged and become the owner.")
+                     "If approved, you will be charged and become the owner immediately.")
 
 
 @App.on_message()
@@ -146,7 +146,7 @@ def other(client, message):
 
         App.send_message(
             chat_id,
-            "Registration succesful. Now you can use bot functions."
+            "Registration succesful. Now you can use IzzyNFTs bot."
             "Use /help for more information",
             reply_markup=ReplyKeyboardMarkup(
                 [
@@ -170,7 +170,7 @@ def other(client, message):
         token_addresses = back.get_tokens(wallet)
 
         if len(token_addresses) <= 0:
-            App.send_message(chat_id, "This user does not have NFTs.")
+            App.send_message(chat_id, "This user does not have any NFTs.")
         else:
 
             if len(token_addresses) == 1:
