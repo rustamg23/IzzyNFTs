@@ -1,7 +1,6 @@
 from solana.rpc.api import Client
 from theblockchainapi import TheBlockchainAPIResource, SolanaNetwork
 import requests
-import json
 
 
 class SolEnd:
@@ -80,11 +79,11 @@ class SolEnd:
         res = f'{name} \n{info}' \
               f'\n- - - - - - - - - - - - - - - -' \
               f' - - - - - - - - - - - - - - - - \n' \
-              f'price is not set now, you can offer it'
+              f'price is not set, people can offer bids, or you can set the price now.'
 
         return res
 
-    def bind(self, binder, holder, nft_address):
+    def bid(self, binder: str, holder: str, nft_address: str):
         self.users_profile[holder] = {"token": nft_address,
                                       "binder": binder}
 
